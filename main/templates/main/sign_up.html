@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Sign up</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/login.css' %}">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+    <div class="wrapper fadeInDown">
+        <div id="formContent">
+          <!-- Tabs Titles -->
+      
+          <!-- Icon -->
+          <div class="fadeIn first">
+            <div class="logo mx-auto">
+                <a href="/">
+                    <img src="https://pstu.edu/wp-content/uploads/2019/06/ПГТУ-лого.png" id="icon" alt="User Icon"/>
+                </a>
+            </div>
+          </div>
+      
+          <!-- Login Form -->
+          <form>
+            <input type="text" id="full_name" class="fadeIn second" name="full_name" placeholder="full_name">
+            <select name="faculty" id="faculty" class="fadeIn second">
+                <option selected disabled>Выбирите факультет</option>
+                <option value="FIT">Информационных технологий</option>
+                <option value="FE">Экономический</option>
+                <option value="FPE">Энергетический</option>
+                <option value="FM">Металургийный</option>
+                <option value="FSH">Социально-гуманитарный</option>
+                <option value="FMEW">Машиностроения и сварки</option>
+                <option value="FTT">Транспортных технологий</option>
+                <option value="FELTR">Инженерной и языковой подготовки</option>
+            </select>
+            <input type="text" id="email" class="fadeIn second" name="email" placeholder="Email">
+            <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
+            <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
+            <input type="submit" class="fadeIn fourth" value="Sign up">
+          </form>
+        </div>
+      </div>
+</body>
+
+</html>
