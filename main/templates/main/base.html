@@ -5,6 +5,8 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/main.css' %}">
     {% block styles %}{% endblock %}
 </head>
 
@@ -15,8 +17,16 @@
             <h5 class="my-0 mr-md-auto font-weight-normal"><a href="http://pstu.edu" style="color:black">PSTU</a></h5>
             <nav class="my-2 my-md-0 mr-md-3">
                 <a class="p-2 text-dark" href="/">Home</a>
-              </nav>
+            {% if username == None %}
+            </nav>
             <a class="btn btn-outline-primary" href="/login">Sign in</a>
+            {% else %}
+            <a class="p-2 text-dark" href="/">Add rating</a>
+            <a class="p-2 text-dark" href="/">{{username}}</a>
+            </nav>
+            <a class="btn btn-outline-primary" href="{% url 'logout' %}">Logout</a>
+            {% endif %}
+            
         </div>
     </header>
     {% block content %}{% endblock %}

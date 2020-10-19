@@ -18,7 +18,7 @@ class Rating(models.Model):
     total = models.FloatField()
 
     def __str__(self):
-        return [self.faculty, self.date, self.full_name, self.session, self.extra, self.total]
+        return "%s | %s | %s | %s | %s | %s" % (self.faculty, self.date, self.full_name, self.session, self.extra, self.total)
 
 
 class ExtraPoint(models.Model):
@@ -29,16 +29,7 @@ class ExtraPoint(models.Model):
     description = models.TextField("Description")
 
     def __str__(self):
-        return [self.student_id, self.date, self.point, self.description]
-
-
-class Professor(models.Model):
-    faculty = models.ForeignKey("Faculty", on_delete=models.DO_NOTHING)
-
-    full_name = models.CharField("Full_name", max_length=255)
-
-    def __str__(self):
-        return [self.faculty, self.full_name]
+        return "%s | %s | %s | %s" % (self.student_id, self.date, self.point, self.description)
 
 
 class Sertificate(models.Model):
@@ -47,4 +38,11 @@ class Sertificate(models.Model):
     sertificate = models.ImageField("Sertificate", upload_to='upoads/', height_field=1280, width_field=720)
 
     def __str__(self):
-        return [self.student_id, self.sertificate]
+        return "%s | %s" % (self.student_id, self.sertificate)
+
+
+class InviteKey(models.Model):
+    invite_key = models.CharField("InviteKey", max_length=255)
+
+    def __str__(self):
+        return self.invite_key

@@ -2,46 +2,39 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Sign in</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'main/css/login.css' %}">
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <meta charset="UTF-8">
+  <title>Sign in</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'main/css/login.css' %}">
+  <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+  <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 </head>
 
 <body>
-    <div class="wrapper fadeInDown">
-        <div id="formContent">
-          <!-- Tabs Titles -->
-      
-          <!-- Icon -->
-          <div class="fadeIn first">
-            <div class="logo mx-auto">
-                <a href="/">
-                    <img src="https://pstu.edu/wp-content/uploads/2019/06/ПГТУ-лого.png" id="icon" alt="User Icon"/>
-                </a>
-            </div>
-          </div>
-      
-          <!-- Login Form -->
-          <form>
-            <input type="text" id="login" class="fadeIn second" name="login" placeholder="login">
-            <input type="text" id="password" class="fadeIn third" name="login" placeholder="password">
-            <input type="submit" class="fadeIn fourth" value="Log In">
-          </form>
-      
-          <!-- Remind Passowrd -->
-          <div id="formFooter">
-            <a class="underlineHover" href="#">Forgot Password?</a>
-          </div>
-          <div id="formFooter">
-            <a class="underlineHover" href="/sign-up">Sign up</a>
-          </div>
-      
-        </div>
+  <div class="wrapper fadeInDown">
+    <div id="formContent">
+      <!-- Tabs Titles -->
+
+      <div class="mt-4">{{error}}</div>
+      <!-- Login Form -->
+      <form class="mt-4" method="POST">
+        {% csrf_token %}
+        <input type="text" id="login" class="fadeIn first" name="login" placeholder="login">
+        <input type="password" id="password" class="fadeIn second" name="password" placeholder="password">
+        <input type="submit" class="fadeIn third" value="Log In">
+      </form>
+
+      <!-- Remind Passowrd -->
+      <div id="formFooter" class="fadeIn fourth">
+        <a class="underlineHover" href="#">Forgot Password?</a>
       </div>
+      <div id="formFooter" class="fadeIn fourth">
+        <a class="underlineHover" href="/sign-up">Sign up</a>
+      </div>
+
+    </div>
+  </div>
 </body>
 
 </html>
