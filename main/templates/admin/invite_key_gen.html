@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Generate invite key</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/login.css' %}">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+</head>
+
+<body>
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+        <!-- Tabs Titles -->
+        <div class="mt-4">
+            {{ error }}
+        </div>
+        <form class="mt-4" method="POST">
+            {% csrf_token %}
+            <input type="text" id="invite_key" class="fadeIn first" name="invite_key"
+                   placeholder="Here will be the generated key" value="{{ invite_key }}">
+            <input type="button" class="fadeIn third" value="Click to copy" onclick="copyText()">
+            <input type="submit" class="fadeIn third" value="Generate">
+            <input type="hidden" name="invite_key_status" value="{{ invite_key }}">
+        </form>
+    </div>
+</div>
+{% load static %}
+<script src="{% static 'main/js/copy_to_clipboard.js' %}"></script>
+</body>
+
+</html>

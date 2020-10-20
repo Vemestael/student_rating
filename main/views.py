@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 import django.contrib.auth as da
@@ -22,7 +24,7 @@ def login(request):
         else:
             context= {'error': 'invalid login'}
     return render(request, 'main/sign_in.html', context)
-         
+
 def sign_up(request):
     da.logout(request)
     invite_key_status = ""
@@ -43,7 +45,7 @@ def sign_up(request):
                 last_name = full_name[1]
             if len(first_name) == 0 or len(last_name) == 0:
                 error = 'enter your full name'
-                context = {"invite_key" : "OK", "error": error}
+                context = {"invite_key": "OK", "error": error}
                 return render(request, 'main/sign_up.html', context)
 
             faculty = request.POST.get('faculty')
@@ -51,7 +53,7 @@ def sign_up(request):
                 error = 'enter your faculty'
                 context = {"invite_key" : "OK", "error": error}
                 return render(request, 'main/sign_up.html', context)
-                
+
             email = request.POST['email']
             login = request.POST['login']
             password = request.POST['password']
@@ -61,3 +63,18 @@ def sign_up(request):
             return redirect('/')
     context = {"invite_key" : invite_key_status, "error": error}
     return render(request, 'main/sign_up.html', context)
+
+def invite_key_gen(request):
+    if request.user.is_authenticated:
+        if request.user.is_superuser:
+            invite_key = ""
+            if request.method == "POST":
+                invite_key = uuid4()
+                a_record = model.InviteKey(invite_key=invite_key)
+                a_record.save()
+            context = {"invite_key": invite_key}
+            return render(request, 'admin/invite_key_gen.html', context)
+    return redirect('/')
+
+def add_rating(request):
+    return render(request, 'main/add_rating.html')
