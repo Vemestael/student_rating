@@ -300,3 +300,6 @@ fabric.properties
 .idea/codestream.xml
 
 .idea/
+
+./files/excel/
+./files/certificate/
