@@ -31,7 +31,8 @@ class Rating(models.Model):
 
     def __str__(self):
         return "%s | %s | %s | %s | %s | %s | %s" % (self.faculty,
-            self.date, self.full_name, self.group, self.session, self.extra, self.total)
+                                                     self.date, self.full_name, self.group, self.session, self.extra,
+                                                     self.total)
 
 
 class ExtraPoint(models.Model):
@@ -59,3 +60,12 @@ class ExelFile(models.Model):
 
     def __str__(self):
         return "%s | %s | %s" % (self.uploaded_by_user, self.exel_file, self.date)
+
+
+class Certificate(models.Model):
+    uploaded_by_user = models.CharField("User", max_length=255, default='admin')
+    certificate_file = models.ImageField("CertificateFile", upload_to="./files/certificate/")
+    date = models.DateField("Date", auto_now=False, auto_now_add=True)
+
+    def __str__(self):
+        return "%s | %s | %s" % (self.uploaded_by_user, self.certificate_file, self.date)

@@ -15,8 +15,24 @@ input[type='radio']:checked {
 .calendar {
     background: url('/static/main/images/calendar_today-black-18dp.svg') no-repeat scroll 5px 4px;
     padding-left:30px;
+    width: 75px;
 }
 
 .session_select {
     margin-right: 15px;
 }
+
+a:hover {
+    text-decoration: none;
+}
+
+ul, ul li {
+    list-style: none;
+    display: inline;
+    padding: 0 5px;
+}
+
+.ui-datepicker-calendar {
+   display: none;
+}
+

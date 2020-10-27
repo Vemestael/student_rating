@@ -1,4 +1,5 @@
 from uuid import uuid4
+from datetime import datetime
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
@@ -6,15 +7,59 @@ import django.contrib.auth as da
 import main.models as model
 from django.conf import settings
 import main.forms as forms
+from django.core.paginator import Paginator
 
 from openpyxl import load_workbook
 
 
+def winter(year):
+    start = str(int(year) - 1) + "-31-01",
+    end = year + "-02-28"
+    return [start, end]
+
+
+def summer(year):
+    start = year + "05-01"
+    end = year + "08-01"
+    return [start, end]
+
+
+def now(year):
+    start = year + "-09-01"
+    end = year + "-10-25"
+    return [start, end]
+
+
+def get_rating(faculty: int, session, year):
+    date = []
+    if session == "summer":
+        date = summer(year)
+    else:
+        date = winter(year)
+    rating = model.Rating.objects.filter(date__range=now(year), faculty=faculty).values('id', 'full_name', 'group',
+                                                                                        'session', 'extra', 'total')
+    return rating
+
+
 def index(request):
-    username = None
-    if request.user.is_authenticated:
-        username = request.user.username
-    context = {'username': username}
+
+    form = forms.FilterForm(request.GET)
+    if form.is_valid():
+        faculty = form.cleaned_data.get('faculty')
+        session = form.cleaned_data.get('session')
+        year = form.cleaned_data.get('year_picker')
+        rating = get_rating(faculty, session, year)
+    else:
+        form = forms.FilterForm(initial={'year_picker': str(datetime.now().year)})
+        faculty = form['faculty'].initial
+        session = form['session'].initial
+        year = form['year_picker'].initial
+        rating = get_rating(faculty, session, year)
+
+    paginator = Paginator(rating, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {"page_obj": page_obj, "form": form}
     return render(request, 'main/index.html', context)
 
 
@@ -85,13 +130,11 @@ def invite_key_gen(request):
 
 
 def add_rating(request):
-    username = None
     username = request.user.username
     content_type = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     "application/vnd.ms-excel"]
     if request.method == "POST":
         if 'upload_rating' in request.POST:
-            print('test')
             file = request.FILES['upload_file']
             if file.content_type in content_type:
                 table_entry = model.ExelFile(uploaded_by_user=username, exel_file=file)

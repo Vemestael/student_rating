@@ -6,55 +6,44 @@
 
 {% block styles %}
     {% load static %}
-    <link rel="stylesheet" href="{% static 'main/css/yearpicker.css' %}">
     <link rel="stylesheet" href="{% static 'main/css/index.css' %}">
     <link rel="stylesheet" href="{% static 'main/css/jquery-ui.min.css' %}">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 {% endblock %}
 
 {% block content %}
     <div class="container">
-        <div class="row justify-content-around my-2">
-            <div class="col-12 col-lg-4">
-                Факультет
-                <select name="faculty" class="custom-select w-75">
-                    <option value="FIT">Информационных технологий</option>
-                    <option value="FE">Экономический</option>
-                    <option value="FPE">Энергетический</option>
-                    <option value="FM">Металургийный</option>
-                    <option value="FSH">Социально-гуманитарный</option>
-                    <option value="FMEW">Машиностроения и сварки</option>
-                    <option value="FTT">Транспортных технологий</option>
-                    <option value="FELTR">Инженерной и языковой подготовки</option>
-                </select>
-            </div>
-            <div class="row col-12 col-lg-4 align-items-baseline">
-                <div class="mr-3">
-                    Сессия:
-                </div>
-                <div class="mr-3">
-                    <input type="radio" name="session" value="summer" checked>
-                    <span>summer</span>
-                </div>
-                <div class="mr-3">
-                    <input type="radio" name="session" value="winter" style="margin-right: 2px">
-                    <span>winter</span>
-                </div>
-                <div class="mr-3">
-                    <input type="text" class="yearpicker calendar" value="" style="max-width: 75px">
-                </div>
-            </div>
-            <div class="col-12 col-lg-4">
-                Поиск:
-                <input type="text">
-                <input type="button" value="&#128269;">
-            </div>
-        </div>
+        <form method="get">
 
-        <table class="table table-bordered">
+            <div class="row justify-content-around my-2">
+                <div class="col-12 col-lg-4">
+                    Факультет
+                    {{ form.faculty }}
+                </div>
+
+                <div class="row col-12 col-lg-4 align-items-baseline">
+                    <div>
+                        Сессия:
+                    </div>
+                    <div>
+                        {{ form.session }}
+                    </div>
+                    <div>
+                        {{ form.year_picker }}
+                    </div>
+                </div>
+
+                <div class="col-12 col-lg-4">
+                    Поиск:
+                    <input type="text" id="search-text" onkeyup="tableSearch()">
+                    <input type="button" value="&#128269;">
+                </div>
+            </div>
+        </form>
+
+        <table class="table table-bordered" id="rating-table">
             <thead>
             <tr>
-                <th scope="col">#</th>
+                <th scope="col" class="text-center">#</th>
                 <th scope="col">ФИО</th>
                 <th scope="col">Группа</th>
                 <th scope="col">Сессия</th>
@@ -64,37 +53,53 @@
             </tr>
             </thead>
             <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Иванов Иван Иванович</td>
-                <td>ВТ-20</td>
-                <td>87</td>
-                <td>10<input type="button" value="+" class="float-right mr-1" data-toggle="modal"
-                             data-target="#exampleModal">
-                <td>97</td>
-                <td>N/A</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Иванов Иван Иванович</td>
-                <td>ВТ-20</td>
-                <td>87</td>
-                <td>10<input type="button" value="+" style="float: right; margin-right: 2px;">
-                <td>97</td>
-                <td>N/A</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td>Иванов Иван Иванович</td>
-                <td>ВТ-20</td>
-                <td>87</td>
-                <td>10<input type="button" value="+" style="float: right; margin-right: 2px;">
-                <td>97</td>
-                <td>N/A</td>
-            </tr>
+            {% for row in page_obj %}
+                <tr>
+                    <th scope="row" class="text-center">{{ forloop.counter0 | add:page_obj.start_index }}</th>
+                    <td id="full_name{{ row.id }}">{{ row.full_name }}</td>
+                    <td>{{ row.group }}</td>
+                    <td>{{ row.session }}</td>
+                    <td>{{ row.extra }}<input type="button" value="+" class="float-right mr-1"
+                                              id="{{ row.id }}"
+                                              data-toggle="modal"
+                                              data-target="#exampleModal" onclick="myFunction(this)">
+                    <td>{{ row.total }}</td>
+                    <td>N/A</td>
+                </tr>
+            {% endfor %}
             </tbody>
         </table>
+
+        <div class="pagination row justify-content-center align-items-baseline mb-5">
+            <div class="col-2">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">
+                        <button class="btn btn-outline-secondary"><<</button>
+                    </a>
+                    <a href="?page={{ page_obj.previous_page_number }}">
+                        <button class="btn btn-outline-secondary"><</button>
+                    </a>
+                {% endif %}
+            </div>
+            <div class="col-2">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </div>
+            <div class="col-2">
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">
+                        <button class="btn btn-outline-secondary">></button>
+                    </a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">
+                        <button class="btn btn-outline-secondary">>></button>
+                    </a>
+                {% endif %}
+            </div>
+            <span>
+            </span>
+
+        </div>
     </div>
+
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -106,33 +111,33 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="container">
-                        <div>
-                            To add points upload the certificate
-                        </div>
-                        <div class="mt-3">
-                            Student: <input type="text" readonly value="TEST">
-                        </div>
-                        <div class="mt-3">
-                            Certificate: <input type="file" accept="image/jpeg, image/jpg, image/png">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="modal-body">
+                        <div class="container">
+                            <div>
+                                To add points upload the certificate
+                            </div>
+                            <div class="mt-3">
+                                Student: <input type="text" readonly id="student_fullname" value="TEST">
+                                <input type="hidden" id="student_id">
+                            </div>
+                            <div class="mt-3">
+                                Certificate: <input type="file" name="upload_file">
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
-                </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Upload certificate</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
 {% endblock %}
 {% block scripts %}
     {% load static %}
     <script src="{% static 'main/js/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'main/js/yearpicker.js' %}"></script>
-    <script>
-        $('.yearpicker').yearpicker();
-    </script>
+    <script src="{% static 'main/js/index.js' %}"></script>
 {% endblock %}
