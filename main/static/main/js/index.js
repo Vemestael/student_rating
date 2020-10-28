@@ -1,5 +1,4 @@
 function myFunction(elem) {
-    console.log(elem.id);
     let full_name = document.getElementById('full_name'+elem.id).textContent;
     document.getElementById('student_fullname').value = full_name;
     document.getElementById('student_id').value = elem.id;

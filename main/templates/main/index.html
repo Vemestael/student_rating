@@ -111,7 +111,7 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form method="post">
+                <form action="{% url 'upload-certificate' %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="container">
@@ -119,11 +119,12 @@
                                 To add points upload the certificate
                             </div>
                             <div class="mt-3">
-                                Student: <input type="text" readonly id="student_fullname" value="TEST">
-                                <input type="hidden" id="student_id">
+                                Student: <input type="text" readonly id="student_fullname">
+                                <input type="hidden" name="student_id" id="student_id">
                             </div>
                             <div class="mt-3">
-                                Certificate: <input type="file" name="upload_file">
+                                Certificate: <input type="file" name="upload_file" ,
+                                                    accept="image/jpeg, image/jpg, image/png">
                             </div>
                         </div>
                     </div>

@@ -55,13 +55,3 @@ class FilterForm(form.Form):
         widget=form.Select(attrs={'onchange': 'form.submit()'}),
         choices=year_choices
     )
-
-
-class CertificateForm(form.ModelForm):
-    class Meta:
-        model = models.Certificate
-        fields = ['uploaded_by_user', 'certificate_file']
-        widgets = {
-            "uploaded_by_user": form.HiddenInput(attrs={'id': 'student_id'}),
-            "certificate_file": form.FileInput(attrs={'accept': 'image/jpeg, image/jpg, image/png'})
-        }

@@ -26,7 +26,7 @@ def summer(year):
 
 def now(year):
     start = year + "-09-01"
-    end = year + "-10-25"
+    end = datetime.today().strftime('%Y-%m-%d')
     return [start, end]
 
 
@@ -42,7 +42,6 @@ def get_rating(faculty: int, session, year):
 
 
 def index(request):
-
     form = forms.FilterForm(request.GET)
     if form.is_valid():
         faculty = form.cleaned_data.get('faculty')
@@ -61,6 +60,18 @@ def index(request):
     page_obj = paginator.get_page(page_number)
     context = {"page_obj": page_obj, "form": form}
     return render(request, 'main/index.html', context)
+
+
+def upload_certificate(request):
+    content_type = ["image/jpeg", "image/jpg", "image/png"]
+    file = request.FILES['upload_file']
+    print(file)
+    print(request.POST['student_id'])
+    if file.content_type in content_type:
+        student = model.Rating.objects.get(pk=request.POST['student_id'])
+        table_entry = model.Certificate(uploaded_by_student=student, certificate_file=file)
+        table_entry.save()
+    return redirect('/')
 
 
 def login(request):
@@ -137,7 +148,7 @@ def add_rating(request):
         if 'upload_rating' in request.POST:
             file = request.FILES['upload_file']
             if file.content_type in content_type:
-                table_entry = model.ExelFile(uploaded_by_user=username, exel_file=file)
+                table_entry = model.ExelFile(uploaded_by_user=username, excel_file=file)
                 table_entry.save()
                 read_workbook(file.name)
             return redirect('/add-rating')
