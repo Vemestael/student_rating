@@ -1,0 +1,59 @@
+<div class="modal fade" id="changeRatingModal" tabindex="-1" role="dialog" aria-labelledby="changeRatingModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeRatingModal">Change rating</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'change-from-file' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="container">
+                        <div>
+                            <i>To change rating upload the excel file</i>
+                        </div>
+                        <div class="mt-3">
+                            Excel file: <input type="file" name="upload_file" accept="*.xls, *.xlsx">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Upload certificate</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="successfullyModal" tabindex="-1" role="dialog" aria-labelledby="successfullyModal"
+     aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="successfullyModal">Successfully</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{% url 'change-from-file' %}" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <div class="container">
+                        <div>
+                            Operation completed successfully
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="d-flex justify-content-center">
+                        <button type="button" class="btn btn-secondary my-auto" data-dismiss="modal">OK</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

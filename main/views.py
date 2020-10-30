@@ -1,15 +1,17 @@
-from uuid import uuid4
 from datetime import datetime
+from uuid import uuid4
 
-from django.shortcuts import render, redirect
-from django.contrib.auth.models import User
 import django.contrib.auth as da
-import main.models as model
 from django.conf import settings
-import main.forms as forms
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
-
+from django.core.serializers import serialize
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from openpyxl import load_workbook
+
+import main.forms as forms
+import main.models as model
 
 
 def winter(year):
@@ -47,15 +49,17 @@ def index(request):
         faculty = form.cleaned_data.get('faculty')
         session = form.cleaned_data.get('session')
         year = form.cleaned_data.get('year_picker')
+        dysplayed = form.cleaned_data.get('dysplayed')
         rating = get_rating(faculty, session, year)
     else:
         form = forms.FilterForm(initial={'year_picker': str(datetime.now().year)})
         faculty = form['faculty'].initial
         session = form['session'].initial
         year = form['year_picker'].initial
+        dysplayed = form['dysplayed'].initial
         rating = get_rating(faculty, session, year)
 
-    paginator = Paginator(rating, 10)
+    paginator = Paginator(rating, dysplayed)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
     context = {"page_obj": page_obj, "form": form}
@@ -169,7 +173,7 @@ def add_rating(request):
 
 
 def read_workbook(file_name):
-    file_dir = str(settings.BASE_DIR) + "/files/excel/"
+    file_dir = str(settings.MEDIA_ROOT) + "/media/excel/"
     workbook = load_workbook(file_dir + file_name)
     worksheet = workbook[workbook.sheetnames[0]]
     faculties = {
@@ -199,3 +203,29 @@ def read_workbook(file_name):
         table_entry.extra = temp[4]
         table_entry.total = temp[3] + temp[4]
         table_entry.save()
+
+
+def check_certificate(request):
+    certificates = model.Certificate.objects.all()
+    context = {'certificates': certificates}
+    return render(request, 'main/check-certificate.html', context)
+
+
+def change_rating(request):
+    faculties = model.Faculty.objects.all()
+    student = model.Rating.objects.filter(faculty=1)
+    if request.is_ajax():
+        if 'faculty' in request.GET:
+            student = model.Rating.objects.filter(faculty=int(request.GET['faculty']))
+        if 'student' in request.GET:
+            student = model.Rating.objects.filter(pk=int(request.GET['student']))
+        student = serialize('json', student)
+        return JsonResponse(student, safe=False)
+
+    context = {'faculties': faculties, 'students': student}
+    return render(request, 'main/change_rating.html', context)
+
+
+def change_from_file(request):
+    print(request.path)
+    return redirect('home')

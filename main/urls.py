@@ -10,4 +10,7 @@ urlpatterns = [
     path('add-rating', views.add_rating, name="add-rating"),
     path('admin/invite-key-gen', views.invite_key_gen, name="admin/invite-key-gen"),
     path("logout/", LogoutView.as_view(), name="logout"),
+    path('check-certificate', views.check_certificate, name="check-certificate"),
+    path('change-rating', views.change_rating, name="change-rating"),
+    path('change-from-file', views.change_from_file, name="change-from-file"),
 ]

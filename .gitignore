@@ -301,5 +301,5 @@ fabric.properties
 
 .idea/
 
-files/excel/*
-files/certificate/*
+main/static/media/excel/*
+main/static/media/certificate/*

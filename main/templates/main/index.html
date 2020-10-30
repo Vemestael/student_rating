@@ -32,10 +32,10 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-lg-4">
-                    Поиск:
-                    <input type="text" id="search-text" onkeyup="tableSearch()">
-                    <input type="button" value="&#128269;">
+                <div class="float-right">
+                    Показать:
+                    {{ form.dysplayed }}
+                    записей
                 </div>
             </div>
         </form>
@@ -54,7 +54,8 @@
             </thead>
             <tbody>
             {% for row in page_obj %}
-                <tr>
+                <tr data-toggle="collapse" data-target="#collapse{{ forloop.counter0 }}" aria-expanded="false"
+                    aria-controls="collapse{{ forloop.counter0 }}">
                     <th scope="row" class="text-center">{{ forloop.counter0 | add:page_obj.start_index }}</th>
                     <td id="full_name{{ row.id }}">{{ row.full_name }}</td>
                     <td>{{ row.group }}</td>
@@ -66,9 +67,41 @@
                     <td>{{ row.total }}</td>
                     <td>N/A</td>
                 </tr>
+
+                <tr class="collapse" id="collapse{{ forloop.counter0 }}">
+                    <td colspan="7">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th scope="col">Кол-во баллов</th>
+                                <th scope="col" class="col-5">Активность</th>
+                                <th scope="col">Сертификат</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Суботник</td>
+                                <td><a href="">Просмотреть изображение</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">5</th>
+                                <td>Конференция "Таланты факультета"</td>
+                                <td><a href="">Просмотреть изображение</a></td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Песни пляски</td>
+                                <td><a href="#">Просмотреть изображение</a></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </td>
+                </tr>
             {% endfor %}
             </tbody>
         </table>
+
 
         <div class="pagination row justify-content-center align-items-baseline mb-5">
             <div class="col-2">
@@ -82,7 +115,9 @@
                 {% endif %}
             </div>
             <div class="col-2">
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                {% if page_obj.paginator.num_pages > 1 %}
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+                {% endif %}
             </div>
             <div class="col-2">
                 {% if page_obj.has_next %}
@@ -94,12 +129,8 @@
                     </a>
                 {% endif %}
             </div>
-            <span>
-            </span>
-
         </div>
     </div>
-
 
     <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
          aria-hidden="true">
@@ -116,7 +147,7 @@
                     <div class="modal-body">
                         <div class="container">
                             <div>
-                                To add points upload the certificate
+                                <i>To add points upload the certificate</i>
                             </div>
                             <div class="mt-3">
                                 Student: <input type="text" readonly id="student_fullname">

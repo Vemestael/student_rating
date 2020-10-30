@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 
 FACULTY_CHOICES = {
     1: 'Информационных технологий',
@@ -75,7 +76,7 @@ class InviteKey(models.Model):
 
 class ExelFile(models.Model):
     uploaded_by_user = models.CharField("User", max_length=255, default='admin')
-    excel_file = models.FileField("ExelFile", upload_to="./files/excel/")
+    excel_file = models.FileField("ExelFile", upload_to="media/excel")
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
 
     def get_uploaded_by_user(self):
@@ -93,7 +94,7 @@ class ExelFile(models.Model):
 
 class Certificate(models.Model):
     uploaded_by_student = models.ForeignKey(Rating, on_delete=models.CASCADE)
-    certificate_file = models.FileField("CertificateFile", upload_to="./files/certificate/")
+    certificate_file = models.FileField("CertificateFile", upload_to="media/certificate")
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
 
     def get_uploaded_by_student(self):

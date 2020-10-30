@@ -5,47 +5,28 @@
     <meta charset="UTF-8">
     <title>{% block title %}{% endblock %}</title>
     {% load static %}
+    <link rel="shortcut icon" type="image/png" href="{% static 'main/images/favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'main/css/bootstrap.min.css' %}">
     {% block styles %}{% endblock %}
 </head>
 
 <body>
 <div class="d-flex flex-column min-vh-100">
-    <header>
-        <div class="container-fluid p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
-            <div class="container  d-flex flex-column flex-md-row align-items-center">
-                <h5 class="my-0 mr-md-auto font-weight-normal"><a href="http://pstu.edu" style="color:black">PSTU</a>
-                </h5>
-                <nav class="my-2 my-md-0 mr-md-3">
-                    {% url 'home' as home %}
-                    <a class="p-2 text-dark" href="/" style="{% if request.path == home %}font-weight: bold{% endif %}">Home</a>
-                    {% if user.is_authenticated %}
-                        {% url 'add-rating' as add_rating %}
-                        <a class="p-2 text-dark" href="{% url 'add-rating' %}" style="{% if request.path == add_rating %}font-weight: bold{% endif %}">Rating</a>
-                        <a class="p-2 text-dark" href="/">{{ user.username }}</a>
-                        </nav>
-                        <a class="btn btn-outline-primary" href="{% url 'logout' %}">Logout</a>
-                    {% else %}
-                        </nav>
-                        <a class="btn btn-outline-primary" href="{% url 'login' %}">Sign in</a>
-                    {% endif %}
-            </div>
-        </div>
-    </header>
+    {% include "main/header.html" %}
+
     <main>
-    {% block content %}{% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
-    <footer class="mt-auto w-100 py-4 border-top">
-        <div class="container text-center">
-            <small>Created by &copy; <a href="http://github.com/HanGerrel">HanGerrel</a></small>
-        </div>
-    </footer>
+    {% include "main/modals.html" %}
+
+    {% include "main/footer.html" %}
 </div>
 
 {% load static %}
 <script src="{% static 'main/js/jquery-3.5.1.min.js' %}"></script>
-<script src="{% static 'main/js/bootstrap.min.js' %}"></script>
-{% block scripts %}{% endblock %}</body>
+<script src="{% static 'main/js/bootstrap.bundle.min.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
 
 </html>

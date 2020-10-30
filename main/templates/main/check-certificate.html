@@ -1,0 +1,54 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+    <div class="container">
+        {% for row in certificates %}
+            <div class="mb-2">
+                <button class="btn btn-outline-secondary text-left col-12" type="button" data-toggle="collapse"
+                        data-target="#collapse{{ forloop.counter0 }}"
+                        aria-expanded="false" aria-controls="collapse{{ forloop.counter0 }}">
+                    {{ row.uploaded_by_student.faculty }}
+                    {{ row.uploaded_by_student.group }}
+                    {{ row.uploaded_by_student.full_name }}
+                    {{ row.date }}
+                </button>
+                <div class="collapse" id="collapse{{ forloop.counter0 }}">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="p-3 border d-flex flex-row">
+                            <div class="col-9">
+                                {% load static %}
+                                <img src="{% static row.certificate_file %}" class="w-100">
+                            </div>
+                            <div class="col-3">
+                                <div class="my-2">
+                                    Текущее количество доп. баллов
+                                    <input style="width: 30px" type="text" id="current_extra{{ forloop.counter0 }}"
+                                           readonly
+                                           value="{{ row.uploaded_by_student.extra }}">
+                                </div>
+                                <div class="mb-3">
+                                    Добавить баллов
+                                    <input style="width: 30px" type="text" id="add_extra{{ forloop.counter0 }}"
+                                           value="0">
+                                </div>
+                                <div class="row">
+                                    <button  type="button" onclick="check_extra(this)" class="btn btn-success mr-5"
+                                            id="{{ forloop.counter0 }}">Принять
+                                    </button>
+                                    <button type="button" class="btn btn-danger">Отклонить</button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'main/js/check-certificate.js' %}"></script>
+{% endblock %}

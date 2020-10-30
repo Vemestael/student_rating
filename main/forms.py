@@ -1,6 +1,7 @@
 from datetime import datetime
 
 import django.forms as form
+
 import main.models as models
 
 
@@ -55,3 +56,9 @@ class FilterForm(form.Form):
         widget=form.Select(attrs={'onchange': 'form.submit()'}),
         choices=year_choices
     )
+    dysplayed = form.ChoiceField(choices=[
+        (10, '10'),
+        (25, '25'),
+        (50, '50'),
+        (100, '100'),
+    ], widget=form.Select(attrs={'onchange': 'form.submit()'}), initial=10)
