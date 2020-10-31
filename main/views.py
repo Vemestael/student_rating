@@ -154,7 +154,7 @@ def add_rating(request):
             if file.content_type in content_type:
                 table_entry = model.ExelFile(uploaded_by_user=username, excel_file=file)
                 table_entry.save()
-                read_workbook(file.name)
+                read_workbook(file.name, 'new')
             return redirect('/add-rating')
         if 'add_rating' in request.POST:
             form = forms.AddRatingForm(request.POST)
@@ -172,7 +172,7 @@ def add_rating(request):
         return render(request, 'main/add_rating.html', context)
 
 
-def read_workbook(file_name):
+def read_workbook(file_name, action):
     file_dir = str(settings.MEDIA_ROOT) + "/media/excel/"
     workbook = load_workbook(file_dir + file_name)
     worksheet = workbook[workbook.sheetnames[0]]
@@ -191,21 +191,50 @@ def read_workbook(file_name):
     faculty = faculties.get(worksheet.cell(row=2, column=2).value)
     faculty = model.Faculty.objects.get(id=faculty)
 
-    for row in worksheet.iter_rows(min_row=2):
-        temp = []
-        for cells in row:
-            temp.append(cells.value)
-        table_entry = model.Rating()
-        table_entry.full_name = temp[0]
-        table_entry.faculty = faculty
-        table_entry.group = temp[2]
-        table_entry.session = temp[3]
-        table_entry.extra = temp[4]
-        table_entry.total = temp[3] + temp[4]
-        table_entry.save()
+    if action == 'new':
+        for row in worksheet.iter_rows(min_row=2):
+            temp = []
+            for cells in row:
+                temp.append(cells.value)
+            table_entry = model.Rating()
+            table_entry.full_name = temp[0]
+            table_entry.faculty = faculty
+            table_entry.group = temp[2]
+            table_entry.session = temp[3]
+            table_entry.extra = temp[4]
+            table_entry.total = float(temp[3]) + float(temp[4])
+            table_entry.save()
+    if action == 'update':
+        for row in worksheet.iter_rows(min_row=2):
+            temp = []
+            for cells in row:
+                temp.append(cells.value)
+            table_entry = model.Rating.objects.get(faculty=faculty, group=temp[2], full_name=temp[0])
+            table_entry.session = temp[3]
+            table_entry.extra = temp[4]
+            table_entry.total = float(temp[3]) + float(temp[4])
+            table_entry.save()
 
 
 def check_certificate(request):
+    if request.is_ajax():
+        record_id = request.POST['record_id']
+        if request.POST['action'] == 'add':
+            certificate = model.Certificate.objects.get(pk=record_id)
+            student_id = certificate.uploaded_by_student
+            point = request.POST['added_points']
+            description = request.POST['activity']
+            certificate_file = certificate.certificate_file
+            extra_points = model.ExtraPoint(student_id=student_id, point=point, description=description,
+                                            certificate=certificate_file)
+            student_rating = model.Rating.objects.get(pk=student_id.id)
+            student_rating.extra += int(point)
+            student_rating.save()
+            extra_points.save()
+            certificate.delete()
+        if request.POST['action'] == 'reject':
+            model.Certificate.objects.get(pk=record_id).delete()
+
     certificates = model.Certificate.objects.all()
     context = {'certificates': certificates}
     return render(request, 'main/check-certificate.html', context)
@@ -227,5 +256,13 @@ def change_rating(request):
 
 
 def change_from_file(request):
-    print(request.path)
+    username = request.user.username
+    content_type = ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    "application/vnd.ms-excel"]
+    if request.method == "POST":
+        file = request.FILES['upload_file']
+        if file.content_type in content_type:
+            table_entry = model.ExelFile(uploaded_by_user=username, excel_file=file)
+            table_entry.save()
+            read_workbook(file.name, 'update')
     return redirect('home')

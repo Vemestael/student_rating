@@ -1,5 +1,4 @@
 from django.db import models
-from django.conf import settings
 
 FACULTY_CHOICES = {
     1: 'Информационных технологий',
@@ -52,8 +51,7 @@ class Rating(models.Model):
         return self.total
 
     def __str__(self):
-        return "%s | %s | %s | %s | %s | %s | %s" % (
-            self.faculty, self.date, self.full_name, self.group, self.session, self.extra, self.total)
+        return "%s | %s | %s" % (self.faculty, self.group, self.full_name)
 
 
 class ExtraPoint(models.Model):
@@ -62,9 +60,26 @@ class ExtraPoint(models.Model):
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
     point = models.IntegerField()
     description = models.TextField("Description")
+    certificate = models.FileField("Certificate", upload_to="media/certificate")
+
+    def get_student_id(self):
+        return self.student_id.full_name
+
+    def get_date(self):
+        return self.date
+
+    def get_point(self):
+        return self.point
+
+    def get_description(self):
+        return self.description
+
+    def get_certificate(self):
+        return self.certificate
 
     def __str__(self):
-        return "%s | %s | %s | %s" % (self.student_id, self.date, self.point, self.description)
+        return "%s | %s | %s | %s | %s" % (
+            self.student_id, self.date, self.point, self.description, self.certificate)
 
 
 class InviteKey(models.Model):

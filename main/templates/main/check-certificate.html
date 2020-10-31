@@ -1,48 +1,60 @@
 {% extends 'main/base.html' %}
 
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/check-certificate.css' %}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
         {% for row in certificates %}
-            <div class="mb-2">
-                <button class="btn btn-outline-secondary text-left col-12" type="button" data-toggle="collapse"
-                        data-target="#collapse{{ forloop.counter0 }}"
-                        aria-expanded="false" aria-controls="collapse{{ forloop.counter0 }}">
-                    {{ row.uploaded_by_student.faculty }}
-                    {{ row.uploaded_by_student.group }}
-                    {{ row.uploaded_by_student.full_name }}
-                    {{ row.date }}
-                </button>
-                <div class="collapse" id="collapse{{ forloop.counter0 }}">
-                    <form method="post">
-                        {% csrf_token %}
+            <form method="post" id="{{ row.id }}">
+                {% csrf_token %}
+                <div class="mb-2">
+                    <button class="btn btn-outline-secondary text-left col-12" type="button" data-toggle="collapse"
+                            data-target="#collapse{{ forloop.counter0 }}"
+                            aria-expanded="false" aria-controls="collapse{{ forloop.counter0 }}">
+                        {{ row.uploaded_by_student.faculty }}
+                        {{ row.uploaded_by_student.group }}
+                        {{ row.uploaded_by_student.full_name }}
+                        {{ row.date }}
+                    </button>
+                    <div class="collapse" id="collapse{{ forloop.counter0 }}">
                         <div class="p-3 border d-flex flex-row">
                             <div class="col-9">
                                 {% load static %}
-                                <img src="{% static row.certificate_file %}" class="w-100">
+                                <img src="{% static row.certificate_file %}" alt="" class="w-100">
                             </div>
                             <div class="col-3">
                                 <div class="my-2">
                                     Текущее количество доп. баллов
-                                    <input style="width: 30px" type="text" id="current_extra{{ forloop.counter0 }}"
-                                           readonly
+                                    <input type="text" id="extra_points{{ row.id }}" readonly
                                            value="{{ row.uploaded_by_student.extra }}">
                                 </div>
                                 <div class="mb-3">
                                     Добавить баллов
-                                    <input style="width: 30px" type="text" id="add_extra{{ forloop.counter0 }}"
-                                           value="0">
+                                    <input type="text" name="added_points" id="added_points{{ row.id }}" value="0">
+                                </div>
+                                <div class="mb-3">
+                                    Активность, за которую добавляются баллы:
+                                    <textarea name="activity" id="activity{{ row.id }}"></textarea>
                                 </div>
                                 <div class="row">
-                                    <button  type="button" onclick="check_extra(this)" class="btn btn-success mr-5"
-                                            id="{{ forloop.counter0 }}">Принять
+                                    <input type="hidden" name="record_id" value="{{ row.id }}">
+                                    <input type="hidden" name="action" id="action{{ row.id }}">
+                                    <button type="submit" class="btn btn-success mr-5" name="add" value="{{ row.id }}"
+                                            {% if row.uploaded_by_student.extra == 10 %}disabled{% endif %}>
+                                        Принять
                                     </button>
-                                    <button type="button" class="btn btn-danger">Отклонить</button>
+                                    <button type="submit" class="btn btn-danger" name="reject" value="{{ row.id }}">
+                                        Отклонить
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                    </form>
+                    </div>
                 </div>
-            </div>
+            </form>
         {% endfor %}
     </div>
 
