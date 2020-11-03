@@ -1,0 +1,38 @@
+.nav-link {
+    border: 1px solid #dee2e6 !important;
+}
+
+.nav-tabs {
+    border-bottom: none;
+}
+
+.nav-tabs .nav-link {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    color: #495057;
+}
+
+.nav-tabs .nav-link.active {
+    border-left: 2px solid #58a8ff !important;
+}
+
+.key-gen-elements {
+    width: 300px;
+}
+
+input {
+    width:250px;
+}
+
+input[type="text"]::placeholder {
+    text-align: center;
+}
+
+label {
+    display: block;
+}
+
+hr {
+    display: block;
+    margin-top: 0;
+}

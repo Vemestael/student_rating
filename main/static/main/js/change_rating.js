@@ -1,11 +1,11 @@
 $(document).ready(function () {
-    $("#faculty").change(faculty_change);
-    $("#student").change(student_change);
-    $("#change_rating").click(change_rating);
-    student_change();
+    $("#faculty").change(facultyChange);
+    $("#student").change(studentChange);
+    $("#change_rating").click(changeRating);
+    studentChange();
 });
 
-function faculty_change() {
+function facultyChange() {
     let faculty = $("#faculty").val();
     $.ajax({
         type: 'GET',
@@ -19,13 +19,13 @@ function faculty_change() {
                 elem.append(`<option value="${data[i]['pk']}">
                                         ${(data[i]['fields']['group'])} ${data[i]['fields']['full_name']}</option>`);
             }
-            student_change()
+            studentChange()
         },
         dataType: 'json',
     });
 }
 
-function student_change() {
+function studentChange() {
     let student = $("#student").val();
     $.ajax({
         type: 'GET',
@@ -34,24 +34,30 @@ function student_change() {
         success: function (response) {
             let data = JSON.parse(response);
             $("#session").val(data[0]['fields']['session']);
-            $("#extra").val(data[0]['fields']['extra']);
-            if ($("#extra").val() === "10") {
+            $("#extra_points").val(data[0]['fields']['extra']);
+            $("#change_rating").val(data[0]['pk']);
+            if (data[0]['fields']['extra'] === 10) {
                 $("#add_points_button").prop("disabled", true);
-            }
-            else{
+            } else {
                 $("#add_points_button").prop("disabled", false);
             }
+            $('#collapseExample').attr("class", "collapse");
+            $("#added_points").val(0);
+            $("#activity").val("");
+            $("#certificate").val("");
         },
         dataType: 'json',
     });
 }
 
-$(document).ready(function () {
-
-});
-
-function change_rating() {
-    if ($("#added_extra").val()) {
+function changeRating() {
+    if ($("#added_points").val()) {
         $("#activity").attr("required", true);
+    }
+    let now = parseInt($("#extra_points").val())
+    let add = parseInt($("#added_points").val())
+    if (now + add > 10) {
+        alert('Не может быть больше 10 доп.баллов');
+        return false;
     }
 }

@@ -3,7 +3,9 @@ from uuid import uuid4
 
 import django.contrib.auth as da
 from django.conf import settings
+from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.models import User
+from django.contrib.auth.forms import PasswordChangeForm
 from django.core.paginator import Paginator
 from django.core.serializers import serialize
 from django.http import JsonResponse
@@ -15,20 +17,14 @@ import main.models as model
 
 
 def winter(year):
-    start = str(int(year) - 1) + "-31-01",
-    end = year + "-02-28"
+    start = year + "-08-02"
+    end = str(int(year) + 1) + "-02-28"
     return [start, end]
 
 
 def summer(year):
-    start = year + "05-01"
-    end = year + "08-01"
-    return [start, end]
-
-
-def now(year):
-    start = year + "-09-01"
-    end = datetime.today().strftime('%Y-%m-%d')
+    start = year + "-03-01"
+    end = year + "-08-01"
     return [start, end]
 
 
@@ -36,11 +32,11 @@ def get_rating(faculty: int, session, year):
     date = []
     if session == "summer":
         date = summer(year)
-    else:
+    if session == "winter":
         date = winter(year)
-    rating = model.Rating.objects.filter(date__range=now(year), faculty=faculty).values('id', 'full_name', 'group',
-                                                                                        'session', 'extra', 'total')
-    return rating
+    rating = model.Rating.objects.filter(date__range=date, faculty=faculty).values('id', 'full_name', 'group',
+                                                                                   'session', 'extra', 'total')
+    return rating.order_by('-total')
 
 
 def index(request):
@@ -69,13 +65,20 @@ def index(request):
 def upload_certificate(request):
     content_type = ["image/jpeg", "image/jpg", "image/png"]
     file = request.FILES['upload_file']
-    print(file)
     print(request.POST['student_id'])
     if file.content_type in content_type:
         student = model.Rating.objects.get(pk=request.POST['student_id'])
         table_entry = model.Certificate(uploaded_by_student=student, certificate_file=file)
         table_entry.save()
     return redirect('/')
+
+
+def get_details(request):
+    if request.is_ajax():
+        student_id = request.GET['student']
+        details = model.ExtraPoint.objects.filter(student_id=student_id)
+        details = serialize('json', details)
+        return JsonResponse(details, safe=False)
 
 
 def login(request):
@@ -229,6 +232,7 @@ def check_certificate(request):
                                             certificate=certificate_file)
             student_rating = model.Rating.objects.get(pk=student_id.id)
             student_rating.extra += int(point)
+            student_rating.total += int(point)
             student_rating.save()
             extra_points.save()
             certificate.delete()
@@ -250,6 +254,22 @@ def change_rating(request):
             student = model.Rating.objects.filter(pk=int(request.GET['student']))
         student = serialize('json', student)
         return JsonResponse(student, safe=False)
+    if request.method == "POST":
+        student_id = int(request.POST['student_id'])
+        session = float(request.POST['session'])
+        extra_point = int(request.POST['added_points'])
+        description = request.POST['activity']
+        file = ''
+        if 'upload_file' in request.FILES:
+            file = request.FILES['upload_file']
+        student_rating = model.Rating.objects.get(pk=student_id)
+        extra_points = model.ExtraPoint(student_id=student_rating, point=extra_point, description=description,
+                                        certificate=file)
+        student_rating.session = session
+        student_rating.extra += extra_point
+        student_rating.total += extra_points
+        student_rating.save()
+        extra_points.save()
 
     context = {'faculties': faculties, 'students': student}
     return render(request, 'main/change_rating.html', context)
@@ -266,3 +286,41 @@ def change_from_file(request):
             table_entry.save()
             read_workbook(file.name, 'update')
     return redirect('home')
+
+
+def profile(request):
+    success = ''
+    password_change_form = PasswordChangeForm(user=request.user)
+    context = {}
+    if request.is_ajax():
+        if request.user.is_superuser:
+            invite_key = uuid4()
+            a_record = model.InviteKey(invite_key=invite_key)
+            a_record.save()
+            context = {"invite_key": invite_key}
+        return JsonResponse(context)
+    if request.method == 'POST':
+        user = User.objects.get(id=request.user.id)
+        if 'update_profile' in request.POST:
+            user.username = request.POST['username']
+            user.first_name = request.POST['first_name']
+            user.last_name = request.POST['last_name']
+            user.save()
+            success = 'profile updated successfully'
+        if 'update_email' in request.POST:
+            print(request.POST['email'])
+            user.email = request.POST['email']
+            user.save()
+            success = 'email updated successfully'
+        if 'update_password' in request.POST:
+            form = PasswordChangeForm(user=request.user, data=request.POST or None)
+            print('test')
+            if form.is_valid():
+                print('test2')
+                form.save()
+                update_session_auth_hash(request, form.user)
+            success = 'password updated successfully'
+        context = {"success": success}
+        return render(request, 'main/profile.html', context)
+    context = {"password_change_form": password_change_form, "success": success}
+    return render(request, 'main/profile.html', context)

@@ -1,0 +1,129 @@
+{% extends 'main/base.html' %}
+
+{% block title %}
+    Student rating
+{% endblock %}
+
+{% block styles %}
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'main/css/profile.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="row">
+            <div class="nav  nav-tabs flex-column col-2" id="nav-tab" role="tablist">
+                <a class="nav-item nav-link active" id="nav-profile-tab" data-toggle="tab" href="#nav-profile"
+                   role="tab"
+                   aria-controls="nav-profile" aria-selected="true">Profile</a>
+                <a class="nav-item nav-link" id="nav-email-tab" data-toggle="tab" href="#nav-email" role="tab"
+                   aria-controls="nav-email" aria-selected="false">Email</a>
+                <a class="nav-item nav-link" id="nav-password-tab" data-toggle="tab" href="#nav-password" role="tab"
+                   aria-controls="nav-password" aria-selected="false">Account security</a>
+                {% if user.is_superuser %}
+                    <a class="nav-item nav-link" id="nav-invite-key-tab" data-toggle="tab" href="#nav-invite-key"
+                       role="tab"
+                       aria-controls="nav-invite-key" aria-selected="false">Invite key</a>
+                {% endif %}
+            </div>
+            <div class="tab-content border col-10" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
+                     aria-labelledby="nav-profile-tab">
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mt-4">
+                            Username: <label>
+                            <input name="username" type="text" style="margin-left: 2px"
+                                   value="{{ user.username }}">
+                        </label>
+                        </div>
+                        <div class="mt-4">
+                            First name: <label>
+                            <input name="first_name" type="text" value="{{ user.first_name }}">
+                        </label>
+                        </div>
+                        <div class="mt-4">
+                            Last name: <label>
+                            <input name="last_name" type="text" value="{{ user.last_name }}">
+                        </label>
+                        </div>
+                        <div class="my-4">
+                            <button class="btn btn-success" name="update_profile">
+                                Update profile
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="nav-email" role="tabpanel" aria-labelledby="nav-email-tab">
+                    <div class="mt-4">
+                        Email
+                        <label>
+                            <input type="text" value="{{ user.email }}">
+                        </label>
+                    </div>
+                    <form method="post" id="email_form">
+                        {% csrf_token %}
+                        <div class="mt-4">
+                            <b>Change email</b>
+                            <hr>
+                        </div>
+                        <div class="mt-2">
+                            New email
+                            <label>
+                                <input name="email" type="text">
+                            </label>
+                        </div>
+                        <div class="my-4">
+                            <button class="btn btn-success" name="update_email">
+                                Update email
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
+                    <form method="post" id="password_form">
+                        {% csrf_token %}
+                        <div class="mt-2">
+                            {{ password_change_form.as_p }}
+                        </div>
+                        <div class="my-4">
+                            <button class="btn btn-success" name="update_password">
+                                Update password
+                            </button>
+                        </div>
+                    </form>
+                </div>
+                {% if user.is_superuser %}
+                    <div class="tab-pane fade" id="nav-invite-key" role="tabpanel" aria-labelledby="nav-invite-key-tab">
+                        <form id="invite_key_form" method="POST">
+                            {% csrf_token %}
+                            <div class="mt-2">
+                                <b>Generate invite key</b>
+                            </div>
+                            <div class="mt-2">
+                                <label for="invite_key"></label><input type="text" id="invite_key" name="invite_key"
+                                                                       class="key-gen-elements"
+                                                                       placeholder="Here will be the generated key">
+                            </div>
+                            <div class="mt-2">
+                                <input type="button" class="btn btn-primary key-gen-elements" value="Click to copy"
+                                       onclick="copyText()">
+                            </div>
+                            <div class="my-4">
+                                <input type="submit" id="invite_key_btn" class="btn btn-primary key-gen-elements"
+                                       value="Generate">
+                            </div>
+                        </form>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <input type="hidden" id="success" value="{{ success }}">
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    {% load static %}
+    <script src="{% static 'main/js/copy_to_clipboard.js' %}"></script>
+    <script src="{% static 'main/js/profile.js' %}"></script>
+{% endblock %}

@@ -32,7 +32,19 @@ ul, ul li {
     padding: 0 5px;
 }
 
-.ui-datepicker-calendar {
-   display: none;
+.table-details{
+    width: 95%;
 }
 
+.table-details > thead > tr > th,
+.table-details > tbody > tr > th,
+.table-details > tfoot > tr > th,
+.table-details > thead > tr > td,
+.table-details > tbody > tr > td,
+.table-details > tfoot > tr > td {
+        border: 1px solid black !important;
+}
+
+.certificate-modal{
+    max-width: 755px;
+}

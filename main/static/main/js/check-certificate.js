@@ -1,7 +1,7 @@
 $(document).ready(function () {
     $('form').submit(submit_form);
-    $('[name=\'add\']').click(add_action);
-    $('[name=\'reject\']').click(reject_action);
+    $('[name=\'add\']').click(addAction);
+    $('[name=\'reject\']').click(rejectAction);
 });
 
 function submit_form(e) {
@@ -28,13 +28,13 @@ function submit_form(e) {
     e.preventDefault();
 }
 
-function add_action() {
+function addAction() {
     let id = $(this).val();
     $('#action' + id).val('add');
     $('#activity' + id).prop('required', true);
 }
 
-function reject_action() {
+function rejectAction() {
     let id = $(this).val();
     $('#action' + id).val('reject');
 }
