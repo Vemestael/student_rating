@@ -14,6 +14,8 @@ import os
 from pathlib import Path
 import mimetypes
 
+import environ
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,8 +23,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
+# Get environment variables from .env file
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, 'student_rating/.env'))
+
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+jm7=t0l0an-5$%!-9jrm=4qnr(dphx2vhp@6-yodf0rknb-vy'
+SECRET_KEY = env('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,8 +85,12 @@ WSGI_APPLICATION = 'student_rating.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': env('DATABASE_NAME'),
+        'USER': env('DATABASE_USER'),
+        'PASSWORD': env('DATABASE_PASSWORD'),
+        'HOST': env('DATABASE_HOST'),
+        'PORT': env('DATABASE_PORT'),
     }
 }
 
