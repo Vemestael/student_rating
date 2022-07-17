@@ -1,19 +1,20 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path
 
-from . import views
+from .views import Index, UploadCertificate, GetDetails, Login, SignUp, InviteKeyGen, AddRating, CheckCertificate, \
+    ChangeRating, ChangeFromFile, Profile
 
 urlpatterns = [
-    path('', views.index, name="home"),
-    path('login', views.login, name="login"),
-    path('get-details', views.get_details, name="add-rating"),
-    path('upload-certificate', views.upload_certificate, name="upload-certificate"),
-    path('sign-up', views.sign_up, name="sign-up"),
-    path('add-rating', views.add_rating, name="add-rating"),
-    path('admin/invite-key-gen', views.invite_key_gen, name="admin/invite-key-gen"),
+    path('', Index.as_view(), name="home"),
+    path('login', Login.as_view(), name="login"),
+    path('get-details', GetDetails.as_view(), name="add-rating"),
+    path('upload-certificate', UploadCertificate.as_view(), name="upload-certificate"),
+    path('sign-up', SignUp.as_view(), name="sign-up"),
+    path('add-rating', AddRating.as_view(), name="add-rating"),
+    path('admin/invite-key-gen', InviteKeyGen.as_view(), name="admin/invite-key-gen"),
     path("logout/", LogoutView.as_view(), name="logout"),
-    path('check-certificate', views.check_certificate, name="check-certificate"),
-    path('change-rating', views.change_rating, name="change-rating"),
-    path('change-from-file', views.change_from_file, name="change-from-file"),
-    path('profile', views.profile, name="profile"),
+    path('check-certificate', CheckCertificate.as_view(), name="check-certificate"),
+    path('change-rating', ChangeRating.as_view(), name="change-rating"),
+    path('change-from-file', ChangeFromFile.as_view(), name="change-from-file"),
+    path('profile', Profile.as_view(), name="profile"),
 ]
