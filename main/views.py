@@ -15,6 +15,8 @@ from openpyxl import load_workbook
 import main.forms as forms
 import main.models as model
 
+def is_ajax(request):
+    return request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest'
 
 def winter(year):
     start = year + "-08-02"
@@ -74,7 +76,7 @@ def upload_certificate(request):
 
 
 def get_details(request):
-    if request.is_ajax():
+    if is_ajax(request):
         student_id = request.GET['student']
         details = model.ExtraPoint.objects.filter(student_id=student_id)
         details = serialize('json', details)
@@ -220,7 +222,7 @@ def read_workbook(file_name, action):
 
 
 def check_certificate(request):
-    if request.is_ajax():
+    if is_ajax(request):
         record_id = request.POST['record_id']
         if request.POST['action'] == 'add':
             certificate = model.Certificate.objects.get(pk=record_id)
@@ -247,7 +249,7 @@ def check_certificate(request):
 def change_rating(request):
     faculties = model.Faculty.objects.all()
     student = model.Rating.objects.filter(faculty=1)
-    if request.is_ajax():
+    if is_ajax(request):
         if 'faculty' in request.GET:
             student = model.Rating.objects.filter(faculty=int(request.GET['faculty']))
         if 'student' in request.GET:
@@ -292,7 +294,7 @@ def profile(request):
     success = ''
     password_change_form = PasswordChangeForm(user=request.user)
     context = {}
-    if request.is_ajax():
+    if is_ajax(request):
         if request.user.is_superuser:
             invite_key = uuid4()
             a_record = model.InviteKey(invite_key=invite_key)
