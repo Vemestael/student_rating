@@ -255,7 +255,6 @@ class CheckCertificate(View):
                 student_id = certificate.uploaded_by_student
                 point = request.POST['added_points']
                 description = request.POST['activity']
-                print(description)
                 certificate_file = certificate.certificate_file
                 student_rating = model.Rating.objects.get(pk=student_id.id)
                 extra_points = model.ExtraPoint(student_id=student_rating, point=point, description=description,
@@ -349,15 +348,12 @@ class Profile(View):
                 user.save()
                 success = 'profile updated successfully'
             if 'update_email' in request.POST:
-                print(request.POST['email'])
                 user.email = request.POST['email']
                 user.save()
                 success = 'email updated successfully'
             if 'update_password' in request.POST:
                 form = PasswordChangeForm(user=request.user, data=request.POST or None)
-                print('test')
                 if form.is_valid():
-                    print('test2')
                     form.save()
                     update_session_auth_hash(request, form.user)
                 success = 'password updated successfully'
