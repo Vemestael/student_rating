@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Get environment variables from .env file
 env = environ.Env()
-env.read_env(os.path.join(BASE_DIR, 'student_rating/.env'))
+env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
@@ -137,4 +137,6 @@ STATIC_URL = '/static/'
 LOGOUT_REDIRECT_URL = '/'
 
 # FIXME
+# Нельзя хранить загружаемые и статические файлы в одном месте
+# Необходимо определить STATIC_ROOT для корректной работы на production при использовании WSGI серверов
 MEDIA_ROOT = 'main/static/'
