@@ -60,7 +60,7 @@ class ExtraPoint(models.Model):
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
     point = models.IntegerField()
     description = models.TextField("Description")
-    certificate = models.FileField("Certificate", upload_to="media/certificate")
+    certificate = models.FileField("Certificate", upload_to="certificate")
 
     def get_student_id(self):
         return self.student_id.full_name
@@ -91,7 +91,7 @@ class InviteKey(models.Model):
 
 class ExelFile(models.Model):
     uploaded_by_user = models.CharField("User", max_length=255, default='admin')
-    excel_file = models.FileField("ExelFile", upload_to="media/excel")
+    excel_file = models.FileField("ExelFile", upload_to="excel")
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
 
     def get_uploaded_by_user(self):
@@ -109,7 +109,7 @@ class ExelFile(models.Model):
 
 class Certificate(models.Model):
     uploaded_by_student = models.ForeignKey(Rating, on_delete=models.CASCADE)
-    certificate_file = models.FileField("CertificateFile", upload_to="media/certificate")
+    certificate_file = models.FileField("CertificateFile", upload_to="certificate")
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
 
     def get_uploaded_by_student(self):

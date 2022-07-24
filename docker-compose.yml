@@ -1,14 +1,11 @@
 version: "3.8"
 
-# Закомментированный код работает не корректно из-за неправильно настроенного static root в проекте
-
 services:
   django:
     build:
       context: .
     container_name: django
-    # command: gunicorn student_rating.wsgi --bind 0.0.0.0:8000
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn student_rating.wsgi --bind 0.0.0.0:8000
     ports:
       - "8000:8000"
     volumes:
@@ -18,20 +15,20 @@ services:
     networks:
       - app-network
 
-  # nginx:
-  #   build: 
-  #     context: ./nginx
-  #   container_name: nginx
-  #   tty: true
-  #   ports:
-  #     - "80:80"
-  #   depends_on:
-  #     - django
-  #     - mysql
-  #   volumes:
-  #     - ./src:/var/www/html
-  #   networks:
-  #     - app-network
+  nginx:
+    build:
+      context: ./nginx
+    container_name: nginx
+    tty: true
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+      - mysql
+    volumes:
+      - ./src:/var/www/html
+    networks:
+      - app-network
 
   mysql:
     image: mysql:5.7
