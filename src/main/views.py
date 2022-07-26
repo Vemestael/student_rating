@@ -12,9 +12,12 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView, View
 from openpyxl import load_workbook
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 import main.forms as forms
 import main.models as model
+from main.serializers import ExtraPointSerializer
 
 
 def is_ajax(request):
@@ -125,13 +128,13 @@ class UploadCertificate(View):
         return redirect('/')
 
 
-class GetDetails(View):
+class GetDetails(APIView):
     def get(self, request):
         if is_ajax(self.request):
             student_id = self.request.GET['student']
             details = model.ExtraPoint.objects.filter(student_id=student_id)
-            details = serialize('json', details)
-            return JsonResponse(details, safe=False)
+            details = ExtraPointSerializer(instance=details, many=True)
+            return Response(details.data)
 
 
 class Login(View):

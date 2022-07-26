@@ -43,19 +43,20 @@ function showDetails(elem) {
                 url: '/get-details',
                 data: "student=" + id,
                 success: function (response) {
-                    let data = JSON.parse(response);
+                    let parse_data = JSON.stringify(response);
+                    let data = JSON.parse(parse_data);
                     if (data.length === 0) {
                         $("#details_about" + id).append('<div id="no_data_available' + id + '">Данные отсутствуют</div>');
                     } else {
                         for (let i = 0; i < data.length; i++) {
-                            let point = data[i]['fields']['point'];
-                            let action = data[i]['fields']['description']
+                            let point = data[i]['point'];
+                            let action = data[i]['description']
                             let certificate = ''
-                            if (data[i]['fields']['certificate'].length === 0) {
+                            if (data[i]['certificate'] === null) {
                                 certificate = 'Отсутствует'
                             } else {
                                 certificate = '<a  onclick="showCertificate(this)" data-toggle="modal" data-target="#certificateModal" href=\"' +
-                                    data[i]['fields']['certificate'] + '\">Просмотреть</a>'
+                                    data[i]['certificate'] + '\">Просмотреть</a>'
                             }
                             let row = '<tr>\n' +
                                 '   <th>' + (i + 1) + '</th>\n' +
@@ -80,6 +81,5 @@ function showDetails(elem) {
 function showCertificate(elem) {
     let href = $(elem).prop('href');
     href = href.slice(22);
-    href = '/static/' + href;
     $("#certificate").attr('src', href);
 }

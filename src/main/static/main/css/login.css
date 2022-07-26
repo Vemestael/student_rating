@@ -8,8 +8,6 @@ html {
   body {
     font-family: "Poppins", sans-serif;
     height: 100vh;
-    background-image: url("https://rozklad.pstu.edu/images/pstu_bg.jpg");
-    background-size: cover;
 	  background-repeat: no-repeat;
 	  background-position: center center;
 	  background-attachment: fixed;

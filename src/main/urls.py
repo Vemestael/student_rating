@@ -7,7 +7,7 @@ from .views import Index, UploadCertificate, GetDetails, Login, SignUp, InviteKe
 urlpatterns = [
     path('', Index.as_view(), name="home"),
     path('login', Login.as_view(), name="login"),
-    path('get-details', GetDetails.as_view(), name="add-rating"),
+    path('get-details', GetDetails.as_view(), name="get-details"),
     path('upload-certificate', UploadCertificate.as_view(), name="upload-certificate"),
     path('sign-up', SignUp.as_view(), name="sign-up"),
     path('add-rating', AddRating.as_view(), name="add-rating"),
