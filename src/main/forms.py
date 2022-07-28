@@ -56,7 +56,7 @@ class FilterForm(form.Form):
         widget=form.Select(attrs={'onchange': 'form.submit()'}),
         choices=year_choices
     )
-    dysplayed = form.ChoiceField(choices=[
+    records_per_page = form.ChoiceField(choices=[
         (10, '10'),
         (25, '25'),
         (50, '50'),
