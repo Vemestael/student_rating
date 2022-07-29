@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name='ExelFile',
+            name='ExcelFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('uploaded_by_user', models.CharField(default='admin', max_length=255, verbose_name='User')),
-                ('excel_file', models.FileField(upload_to='media/excel', verbose_name='ExelFile')),
+                ('excel_file', models.FileField(upload_to='media/excel', verbose_name='ExcelFile')),
                 ('date', models.DateField(auto_now_add=True, verbose_name='Date')),
             ],
         ),

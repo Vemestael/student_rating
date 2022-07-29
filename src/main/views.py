@@ -301,7 +301,7 @@ class AddRating(View):
         if 'upload_rating' in request.POST:
             file = request.FILES['upload_file']
             if file.content_type in content_type:
-                table_entry = model.ExelFile(uploaded_by_user=username, excel_file=file)
+                table_entry = model.ExcelFile(uploaded_by_user=username, excel_file=file)
                 table_entry.save()
                 read_workbook(file.name, 'new')
             return redirect('/add-rating')
@@ -425,7 +425,7 @@ class ChangeFromFile(View):
                         "application/vnd.ms-excel"]
         file = request.FILES['upload_file']
         if file.content_type in content_type:
-            table_entry = model.ExelFile(uploaded_by_user=username, excel_file=file)
+            table_entry = model.ExcelFile(uploaded_by_user=username, excel_file=file)
             table_entry.save()
             read_workbook(file.name, 'update')
         return redirect('home')

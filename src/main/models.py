@@ -78,9 +78,9 @@ class InviteKey(models.Model):
         return self.invite_key
 
 
-class ExelFile(models.Model):
+class ExcelFile(models.Model):
     uploaded_by_user = models.CharField("User", max_length=255, default='admin')
-    excel_file = models.FileField("ExelFile", upload_to="excel")
+    excel_file = models.FileField("ExcelFile", upload_to="excel")
     date = models.DateField("Date", auto_now=False, auto_now_add=True)
 
     def get_uploaded_by_user(self):

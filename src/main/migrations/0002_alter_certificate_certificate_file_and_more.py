@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='exelfile',
             name='excel_file',
-            field=models.FileField(upload_to='excel', verbose_name='ExelFile'),
+            field=models.FileField(upload_to='excel', verbose_name='ExcelFile'),
         ),
         migrations.AlterField(
             model_name='extrapoint',
